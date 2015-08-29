@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Mana::Potion do
+describe ManaPotion do
   it 'has a version number' do
-    expect(Mana::Potion::VERSION).not_to be nil
+    expect(ManaPotion::VERSION).not_to be nil
   end
 
   it 'does something useful' do
