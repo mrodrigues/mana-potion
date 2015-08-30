@@ -7,6 +7,7 @@ module ManaPotion
     module ClassMethods
       def mana_pool_for(association, limit: 1, period: 1.day)
         before_validation do
+          period = instance_exec &period if period.respond_to?(:call)
           owner = send(association)
           other_side_association = owner
           .class
