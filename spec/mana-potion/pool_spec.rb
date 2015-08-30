@@ -13,7 +13,7 @@ describe ManaPotion::Pool do
   end
 
   it 'limits posts creation by time limit' do
-    Post.spends_mana_for :user
+    Post.mana_pool_for :user
 
     expect { @user.posts.create! }.to raise_error(ActiveRecord::RecordInvalid)
     Timecop.travel 1.day.from_now
@@ -21,7 +21,7 @@ describe ManaPotion::Pool do
   end
 
   it 'allows configuring the limit' do
-    Post.spends_mana_for :user, limit: 2
+    Post.mana_pool_for :user, limit: 2
 
     expect { @user.posts.create! }.not_to raise_error
     expect { @user.posts.create! }.to raise_error(ActiveRecord::RecordInvalid)
@@ -30,7 +30,7 @@ describe ManaPotion::Pool do
   end
 
   it 'allows configuring the period' do
-    Post.spends_mana_for :user, period: -> { 1.hour.ago..Time.current }
+    Post.mana_pool_for :user, period: 1.hour
 
     expect { @user.posts.create! }.to raise_error(ActiveRecord::RecordInvalid)
     Timecop.travel 1.hour.from_now

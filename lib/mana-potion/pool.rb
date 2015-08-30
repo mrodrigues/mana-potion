@@ -5,7 +5,7 @@ module ManaPotion
     end
 
     module ClassMethods
-      def spends_mana_for(association, limit: 1, period: -> { 1.day.ago..Time.current })
+      def mana_pool_for(association, limit: 1, period: 1.day)
         before_validation do
           owner = send(association)
           other_side_association = owner
@@ -15,7 +15,7 @@ module ManaPotion
 
           count = owner
           .send(other_side_association.name)
-          .where(created_at: period.call)
+          .where(created_at: period.ago..Time.current)
           .count
 
           if count >= limit
