@@ -10,6 +10,7 @@ describe ManaPotion::Pool do
 
   after do
     Post.reset_callbacks(:validation)
+    Timecop.return
   end
 
   it 'limits posts creation by time limit' do
