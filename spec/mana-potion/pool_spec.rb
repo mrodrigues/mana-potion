@@ -1,10 +1,9 @@
 require 'spec_helper'
-require 'mana-potion/pool'
 
 describe ManaPotion::Pool do
   before do
     @user = User.create!
-    @post = @user.posts.create!
+    @user.posts.create!
     Post.send :include, ManaPotion::Pool
   end
 

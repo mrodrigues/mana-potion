@@ -13,6 +13,10 @@ module ManaPotion
       count >= limit
     end
 
+    def remaining
+      limit - count
+    end
+
     def association
       owner
       .class
