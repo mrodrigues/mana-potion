@@ -28,6 +28,7 @@ You just need to include the `ManaPotion::Pool` module in your model's class and
 ```ruby
 class Post < ActiveRecord::Base
   include ManaPotion::Pool
+  belongs_to :user
 
   mana_pool_for :user
 end
@@ -46,10 +47,31 @@ If you want to configure the limit and/or period, just pass them as parameters t
 ```ruby
 class Post < ActiveRecord::Base
   include ManaPotion::Pool
+  belongs_to :user
 
   mana_pool_for :user, limit: 10, period: 1.hour
 end
 ```
+
+The `limit` and `period` options also accept procs, so you can dynamically define their values:
+
+```ruby
+class Post < ActiveRecord::Base
+  include ManaPotion::Pool
+  belongs_to :user
+
+  mana_pool_for :user, limit: -> { limit }, period: -> { period }
+
+  def limit
+    user.premium? ? 20 : 10
+  end
+
+  def period
+    user.premium? ? 1.hour : 1.day
+  end
+end
+```
+
 
 ## Development
 
