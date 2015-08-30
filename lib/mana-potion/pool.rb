@@ -1,3 +1,5 @@
+require 'mana-potion/check_usage'
+
 module ManaPotion
   module Pool
     def self.included(other)
@@ -10,19 +12,9 @@ module ManaPotion
           limit = instance_exec &limit if limit.respond_to?(:call)
           period = instance_exec &period if period.respond_to?(:call)
 
-          owner = send(association)
-          other_side_association = owner
-          .class
-          .reflect_on_all_associations
-          .detect { |r| r.class_name == self.class.name }
-
-          count = owner
-          .send(other_side_association.name)
-          .where(created_at: period.ago..Time.current)
-          .count
-
-          if count >= limit
-            errors.add(association, :limit, limit: limit, count: count)
+          check_usage = ManaPotion::CheckUsage.new(self, send(association), limit, period)
+          if check_usage.exceeded?
+            errors.add(association, :limit, limit: limit, count: check_usage.count)
           end
         end
       end
