@@ -29,6 +29,21 @@ describe ManaPotion::Pool do
     expect { @user.posts.create! }.not_to raise_error
   end
 
+  it 'allows configuring the limit with a proc' do
+    class Post
+      mana_pool_for :user, limit: -> { limit }
+
+      def limit
+        2
+      end
+    end
+
+    expect { @user.posts.create! }.not_to raise_error
+    expect { @user.posts.create! }.to raise_error(ActiveRecord::RecordInvalid)
+    Timecop.travel 1.day.from_now
+    expect { @user.posts.create! }.not_to raise_error
+  end
+
   it 'allows configuring the period' do
     Post.mana_pool_for :user, period: 1.hour
 
