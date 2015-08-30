@@ -2,6 +2,9 @@
 
 Do you need to limit some resource's creation rate? It's simple to do it with `ManaPotion`!
 
+The `ManaPotion` gem helps you validate any `ActiveRecord::Base` model so that no user will be able to create it faster than some given limit.
+Really useful when you're using an expensive API and don't want some user to bankrupt you.
+
 ## Installation
 
 Add this line to your application's Gemfile:
