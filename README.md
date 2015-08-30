@@ -72,6 +72,16 @@ class Post < ActiveRecord::Base
 end
 ```
 
+If you want to check the user's remaining usages, you may use the `ManaPotion::CheckUsage#remaining` method:
+
+```ruby
+user = User.create!
+ManaPotion::CheckUsage.new(Post.new, user, 5, 1.day).remaining # => 5
+
+user.posts.create!
+ManaPotion::CheckUsage.new(Post.new, user, 5, 1.day).remaining # => 4
+```
+
 
 ## Development
 
