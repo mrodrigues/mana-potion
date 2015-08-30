@@ -1,8 +1,6 @@
-# Mana::Potion
+# ManaPotion
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mana-potion`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Do you need to limit some resource's creation rate? It's simple to do it with `ManaPotion`!
 
 ## Installation
 
@@ -22,7 +20,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You just need to include the `ManaPotion::Pool` module in your model's class and call the `mana_pool_for` macro. It defaults to limiting the creation by 1 per day.
+
+```ruby
+class Post < ActiveRecord::Base
+  include ManaPotion::Pool
+
+  mana_pool_for :user
+end
+
+user = User.create!
+user.posts.create! # No problem here
+user.posts.create! # Raises an ActiveRecord::RecordInvalid exception
+
+require 'timecop'
+Timecop.travel 1.day.from_now
+user.posts.create! # No problem here
+```
+
+If you want to configure the limit and/or period, just pass them as parameters to the macro:
+
+```ruby
+class Post < ActiveRecord::Base
+  include ManaPotion::Pool
+
+  mana_pool_for :user, limit: 10, period: 1.hour
+end
+```
 
 ## Development
 
