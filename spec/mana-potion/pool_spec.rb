@@ -65,4 +65,16 @@ describe ManaPotion::Pool do
     Timecop.travel 1.hour.from_now
     expect { @user.posts.create! }.not_to raise_error
   end
+
+  context "when Post doesn't belong to an user" do
+    it "allows nil user" do
+      Post.mana_pool_for :user, allow_nil: true
+      expect { Post.create! }.not_to raise_error
+    end
+
+    it "doesn't allow nil user" do
+      Post.mana_pool_for :user
+      expect { Post.create! }.to raise_error(ManaPotion::Pool::MissingOwnerError)
+    end
+  end
 end

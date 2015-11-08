@@ -72,6 +72,24 @@ class Post < ActiveRecord::Base
 end
 ```
 
+Trying to create a `Post` without an `User` will raise an error:
+```ruby
+Post.create! # Raises a MissingOwnerError
+```
+
+To allow nil value for `User`, include the `allow_nil: true` option:
+
+```ruby
+class Post < ActiveRecord::Base
+  include ManaPotion::Pool
+  belongs_to :user
+
+  mana_pool_for :user, allow_nil: true
+end
+
+Post.create! # Doesn't raise any errors
+```
+
 If you want to check the user's remaining usages, you may use the `ManaPotion::CheckUsage#remaining` method:
 
 ```ruby
